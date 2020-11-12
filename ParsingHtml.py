@@ -74,6 +74,21 @@ class ParseDefault(ParseBase):
                 fund_info.set_fund_info('基金规模', fund_scale.group(1))
             except AttributeError:
                 print(f'股票（名称：{fund_basic_info[0]} 代码：{fund_basic_info[1]})时，获取基金规模失败')
+          
+            try:
+                #fund_target =  re.findall(r'跟踪标的：(.*?) ', page_context)
+                fund_target =  re.search(r'跟踪标的：(?:<a.*?>|)(.*?) ', page_context)
+                txt = fund_target[0]
+                txt =txt.replace("跟踪标的：","")
+                txt =txt.replace("</a>","")
+                print(fund_target[0])
+                fund_info.set_fund_info('跟踪标的', txt)
+       
+            except Exception as e :
+                print(f'股票（名称：{fund_basic_info[0]} 代码：{fund_basic_info[1]})时，获取基金跟踪标的失败')
+                #print(e)
+ 
+            
 
             # 按照基金类型分类并获取其收益数据
             # todo 基金信息获取失败时的处理
@@ -153,7 +168,7 @@ class ParseDefault(ParseBase):
         # 保存文件的第一行（列索引）
         write_format_of_index = ['基金名称', '基金代码', '基金规模', '近1月', '近3月', '近6月', '近1年', '近3年', '成立来', '基金经理', '任职时间',
                                  '任期收益',
-                                 '总任职时间']
+                                 '总任职时间','跟踪标的']
         write_format_of_guaranteed = ['基金名称', '基金代码', '基金规模', '保本期收益', '近1月', '近3月', '近6月', '近1年', '近3年', '基金经理',
                                       '任职时间',
                                       '任期收益', '总任职时间']
